@@ -2,6 +2,7 @@
 let scene;
 let titleScn;
 let gameScn;
+let keys;
 
 // ---- system ----
 function setup() {
@@ -13,6 +14,7 @@ function setup() {
   scene = "game";   // 開発用でgameにしておく
   titleScn = new TitleScn();
   gameScn = new GameScn();
+  keys = new Key();
 }
 
 function draw() {
@@ -100,7 +102,7 @@ class Player {
     stroke(255);
     strokeWeight(2);
 
-    // playerが向いている方方向
+    // playerが向いている方向
     let x1 = this.x + this.r * cos(this.theta);
     let y1 = this.y + this.r * sin(this.theta);
 
@@ -113,6 +115,20 @@ class Player {
     let y3 = this.y + this.r / 2 * sin(this.theta - (120 / 180) * PI); 
 
     triangle(x1, y1, x2, y2, x3, y3);
+  }
+
+  key_pressed() {
+    this.rudder(1);
+  }
+
+  rudder(_power) {
+    switch(keyCode) {
+      case 65:  // aで取り舵
+        this.theta += (_power / 180) * PI;
+        break;
+      case 67:  // dで面舵
+        this.theta -= (_power / 180) * PI;
+    }
   }
 }
 
@@ -138,4 +154,22 @@ class Timer {
   }
 }
  
+class Keys {
+  constructor() {
+    this.isL = false;
+    this.isR = false;
+    this.isU = false;
+  }
 
+  key_pressed() {
+    if (key == 'w') this.isU = true;
+    if (key == 'a') this.isL = true;
+    if (key == 's') this.isD = true;
+  }
+
+  key_released() {
+    if (key == 'w') this.isU = false;
+    if (key == 'a') this.isL = false;
+    if (key == 's') this.isD = false;
+  }
+}
