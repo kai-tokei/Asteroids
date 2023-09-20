@@ -93,7 +93,7 @@ class GameScn {
     background(33, 39, 46);
 
     this.player.display();
-    this.player.rudder(5);
+    this.player.move();
   }
 
   key_pressed() {
@@ -112,6 +112,11 @@ class Player {
     // pos
     this.x = _x;
     this.y = _y;
+
+    // vector
+    this.a = 0;
+    this.vx = 0;
+    this.vy = 0;
     
     // angle
     this.deg_theta = _deg_theta;
@@ -142,10 +147,34 @@ class Player {
     triangle(x1, y1, x2, y2, x3, y3);
   }
 
-  rudder(_power) {
-    stroke(255);
-    text(this.deg_theta, 100, 400);
+  move () {
+    this.rudder(5);
+    this.set_speed();
 
+    this.x += this.vx;
+    this.y += this.vy;
+
+    if (this.x > 660) this.x -= 660;
+    else if (this.x < 0) this.x += 660;
+
+    if (this.y > 500) this.y -= 500;
+    else if (this.y < 0) this.y += 500;
+
+  }
+
+  set_speed() {
+    this.vx += this.a * cos(this.rad_theta);
+    this.vy += this.a * sin(this.rad_theta);
+
+    if (this.keys.isU) this.a = 0.5;
+    else {
+      this.a = 0;
+      this.vx *= 0.98;
+      this.vy *= 0.98;
+    }
+  }
+
+  rudder(_power) {
     if (this.keys.isL) this.deg_theta -= _power;
     if (this.keys.isR) this.deg_theta += _power;
     
@@ -195,6 +224,11 @@ class Timer {
   }
 }
 
+class perticle {
+  constructor(_x, _y, _r) {
+    this.x = _x;
+  }
+}
  
 class Keys {
   constructor() {
