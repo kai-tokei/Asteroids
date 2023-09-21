@@ -10,8 +10,8 @@ function setup() {
   frameRate(60);
 
   // system
-  //scene = "title";
-  scene = "game";   // 開発用でgameにしておく
+  scene = "title";
+  //scene = "game";   // 開発用でgameにしておく
   titleScn = new TitleScn();
   gameScn = new GameScn();
 }
@@ -148,24 +148,35 @@ class Player {
   }
 
   move () {
+    // 方向転換とスピード計算
     this.rudder(5);
-    this.set_speed();
+    this.set_speed(20);
 
+    // 座標移動
     this.x += this.vx;
     this.y += this.vy;
 
+    // 画面外に出たら、反対側にワープする
     if (this.x > 660) this.x -= 660;
     else if (this.x < 0) this.x += 660;
-
     if (this.y > 500) this.y -= 500;
     else if (this.y < 0) this.y += 500;
 
   }
 
-  set_speed() {
+  set_speed(_lim) {
+    // 速度をベクトルに加算
     this.vx += this.a * cos(this.rad_theta);
     this.vy += this.a * sin(this.rad_theta);
 
+    // 速度制限
+    let v = this.vx ** 2 + this.vy ** 2;
+    if (v > _lim ** 2) {
+      this.vx -= this.a * cos(this.rad_theta);
+      this.vy -= this.a * sin(this.rad_theta);
+    }
+
+    // 加減速
     if (this.keys.isU) this.a = 0.5;
     else {
       this.a = 0;
