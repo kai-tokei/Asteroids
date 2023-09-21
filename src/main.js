@@ -91,6 +91,7 @@ class GameScn {
   constructor() {
     this.player = new Player(100, 100, 0);
 
+    this.astrds = [...Array(30)];
     this.aste = new Asteroid(300, 100, 1, 20);
   }
 
@@ -110,5 +111,8 @@ class GameScn {
 
   key_released() {
     this.player.key_released();
+  }
+
+  gen_astrd() {
   }
 }

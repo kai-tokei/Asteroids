@@ -7,7 +7,7 @@ export default class Asteroid {
     this.type = _type;
 
     // speed
-    this.v = _v;
+    this.v = 2;
     this.vx;
     this.vy;
 
@@ -15,14 +15,14 @@ export default class Asteroid {
     this.r = _type; // 暫定的にtypeと置いておく
 
     //this.theta = deg_to_rad(rand(0, 360));
-    this.theta = 0;
+    this.theta = deg_to_rad(random() * 360);
     this.rtheta = 0;
-    this.dtheta = deg_to_rad(this.r / 10);    // 回転演出用
+    this.dtheta = (random() * 1.5 - 1.25) * deg_to_rad(this.r / 10);    // 回転演出用
 
     // 隕石生成
     this.cNum = Math.floor(random() * 2) + 4;
     this.corners = [...Array(6)];
-    this.gn_astrd();
+    this.gn_astrd(Math.floor(random() * 0.5 - 0.5));
   }
 
   display() {
@@ -35,6 +35,12 @@ export default class Asteroid {
     
     this.x += this.vx;
     this.y += this.vy;
+
+    // 画面外に出たら、反対側にワープする
+    if (this.x > 660) this.x -= 660;
+    else if (this.x < 0) this.x += 660;
+    if (this.y > 500) this.y -= 500;
+    else if (this.y < 0) this.y += 500;
   }
 
   set_speed() {
