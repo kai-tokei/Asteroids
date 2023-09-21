@@ -1,6 +1,6 @@
 // ---- funcs----
 export function rand(_low, _high) {
-  return random() * high - _low;
+  return random() * _high - _low;
 }
 
 export function deg_to_rad(_deg) {

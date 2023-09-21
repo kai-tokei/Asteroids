@@ -90,6 +90,8 @@ class TitleScn {
 class GameScn {
   constructor() {
     this.player = new Player(100, 100, 0);
+
+    this.aste = new Asteroid(300, 100, 1, 20);
   }
 
   display() {
@@ -97,6 +99,9 @@ class GameScn {
 
     this.player.display();
     this.player.move();
+
+    this.aste.display();
+    this.aste.move();
   }
 
   key_pressed() {

@@ -1,4 +1,4 @@
-//import {rand, deg_to_rad, rad_to_deg} from '../func.js';
+import {rand, deg_to_rad, rad_to_deg} from './func.js';
 
 export default class Asteroid {
   constructor(_x, _y, _v, _type) {
@@ -7,53 +7,64 @@ export default class Asteroid {
     this.type = _type;
 
     // speed
-    this.v;
+    this.v = _v;
     this.vx;
     this.vy;
 
     // size
-    this.r = _type;
+    this.r = _type; // 暫定的にtypeと置いておく
 
+    //this.theta = deg_to_rad(rand(0, 360));
     this.theta = 0;
-    this.dtheta = deg_to_rad((rand(-1, 1)/360));    // 回転演出用
+    this.rtheta = 0;
+    this.dtheta = deg_to_rad(this.r / 10);    // 回転演出用
 
     // 隕石生成
-    this.cNum = random() * 4 + 3;
-    this.corners = [...Array(cNum)];
-    this.gn_astrd(this.cNum, this.corners);
+    this.cNum = Math.floor(random() * 2) + 4;
+    this.corners = [...Array(6)];
+    this.gn_astrd();
   }
 
   display() {
-    display_astrd(this.cNum, this.corners);   
+    this.display_astrd();   
   }
 
   move() {
-    this.rotate(_power);
+    this.rotate();
+    this.set_speed();
+    
+    this.x += this.vx;
+    this.y += this.vy;
+  }
+
+  set_speed() {
+    this.vx = this.v * cos(this.theta);
+    this.vy = this.v * sin(this.theta);
   }
 
   // 隕石を生成
-  gn_astrd(_cNum, _corners) {
+  gn_astrd() {
     let t = 0;
-    for (let i = 0; i < _cNum-1; i++) {
-      t += rand(0, 360/_cNum) + rand(-((360/_cNum)/2)/_cNum, ((360/_cNum)/2)/_cNum);   // 角をランダムに設定
-      _corners[i] = deg_to_rad(t);
+    let d = 360 / this.cNum;
+    for (let i = 0; i < this.cNum; i++) {
+      t += d;
+      this.corners[i] = deg_to_rad(t);
     }
-    _corners[cNum-1] = 0;
   }
 
   rotate() {
     // 角度変数補正
-    let degTheta = rad_to_deg(this.theta);
+    let degTheta = rad_to_deg(this.rtheta);
     if (degTheta > 180) degTheta -= 360;
     else if (degTheta < -180) degTheta += 360;
-    this.theta = deg_to_rad(degTheta);
+    this.rtheta = deg_to_rad(degTheta);
 
     // 回転
-    this.theta += _dtheta;
+    this.rtheta += this.dtheta;
   }
 
   // 隕石を描画
-  display_astrd(_cNum, _corners) {
+  display_astrd() {
     let scx, scy;
     let dcx, dcy;
 
@@ -62,23 +73,23 @@ export default class Asteroid {
     strokeWeight(2);
 
     // lineを引く
-    for (let i = 0; i < cNum-1; i++) {
+    for (let i = 0; i < this.cNum-1; i++) {
       // src座標
-      scx = this.r * cos(_corners[i] + this.theta);
-      scy = this.r * sin(_corners[i] + this.theta);
+      scx = this.x + this.r * cos(this.corners[i] + this.rtheta);
+      scy = this.y + this.r * sin(this.corners[i] + this.rtheta);
 
       // dst座標
-      dcx = this.r * cos(_corners[i+1] + this.theta);
-      dcy = this.r * sin(_corners[i+1] + this.theta);
+      dcx = this.x + this.r * cos(this.corners[i+1] + this.rtheta);
+      dcy = this.y + this.r * sin(this.corners[i+1] + this.rtheta);
 
       line(scx, scy, dcx, dcy);
     }
     
     // 多角形を閉じる
-    scx = this.r * cos(_corners[_cNum-1] + this.theta);
-    scy = this.r * sin(_corners[_cNum-1] + this.theta);
-    dcx = this.r * cos(_corners[0] + this.theta);
-    dcy = this.r * sin(_corners[0] + this.theta);
+    scx = this.x + this.r * cos(this.corners[this.cNum-1] + this.rtheta);
+    scy = this.y + this.r * sin(this.corners[this.cNum-1] + this.rtheta);
+    dcx = this.x + this.r * cos(this.corners[0] + this.rtheta);
+    dcy = this.y + this.r * sin(this.corners[0] + this.rtheta);
 
     line(scx, scy, dcx, dcy);
   }
