@@ -10,18 +10,18 @@ function setup() {
   frameRate(60);
 
   // system
-  scene = "title";
-  //scene = "game";   // 開発用でgameにしておく
+  scene = "TITLE";
+  //scene = "GAME";   // 開発用でgameにしておく
   titleScn = new TitleScn();
   gameScn = new GameScn();
 }
 
 function draw() {
   switch (scene) {
-    case "title":
+    case "TITLE":
       titleScn.display();
       break;
-    case "game":
+    case "GAME":
       gameScn.display();
       break;
   }
@@ -29,7 +29,7 @@ function draw() {
 
 function mousePressed() {
   switch (scene) {
-    case "title":
+    case "TITLE":
       titleScn.mouse_pressed();
       break;
   }
@@ -37,7 +37,7 @@ function mousePressed() {
 
 function keyPressed() {
   switch(scene) {
-    case "game":
+    case "GAME":
       gameScn.key_pressed();
       break;
   }
@@ -45,7 +45,7 @@ function keyPressed() {
 
 function keyReleased() {
   switch(scene) {
-    case "game":
+    case "GAME":
       gameScn.key_released();
       break;
   }
@@ -79,7 +79,7 @@ class TitleScn {
   }
  
   mouse_pressed() {
-    scene = "game";
+    scene = "GAME";
   }
 }
 
@@ -249,7 +249,7 @@ class Particle {
 }
 
 
-class asteroid {
+class Asteroid {
   constructor(_x, _y, _type) {
     this.x = _x;
     this.y = _y;
@@ -272,16 +272,28 @@ class asteroid {
   }
 
   move() {
+    this.rotate(_power);
   }
 
   // 隕石を生成
   gn_astrd(_cNum, _corners) {
     let t = 0;
     for (let i = 0; i < _cNum-1; i++) {
-      t += rand(0, 360/_cNum) + rand(-((360/_cNum)/2)/_cNum, ((360/_cNum)/2)/_cNum);   // ランダムに回転
+      t += rand(0, 360/_cNum) + rand(-((360/_cNum)/2)/_cNum, ((360/_cNum)/2)/_cNum);   // 角をランダムに設定
       _corners[i] = deg_to_rad(t);
     }
     _corners[cNum-1] = 0;
+  }
+
+  rotate() {
+    // 角度変数補正
+    let degTheta = rad_to_deg(this.theta);
+    if (degTheta > 180) degTheta -= 360;
+    else if (degTheta < -180) degTheta += 360;
+    this.theta = deg_to_rad(degTheta);
+
+    // 回転
+    this.theta += _dtheta;
   }
 
   // 隕石を描画
