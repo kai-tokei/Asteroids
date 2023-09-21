@@ -1,0 +1,79 @@
+export default class Player {
+  constructor(_x, _y, _deg_theta) {
+    // pos
+    this.x = _x;
+    this.y = _y;
+
+    // vector
+    this.a = 0;
+    this.vx = 0;
+    this.vy = 0;
+    
+    // angle
+    this.deg_theta = _deg_theta;
+    this.rad_theta = deg_to_rad(this.deg_theta);
+
+    this.r = 30;
+
+    this.keys = new Keys();
+  }
+
+  display() {
+    noFill();
+    stroke(255);
+    strokeWeight(2);
+
+    // playerが向いている方向
+    let x1 = this.x + this.r * cos(this.rad_theta);
+    let y1 = this.y + this.r * sin(this.rad_theta);
+
+    // 左舷
+    let x2 = this.x + this.r / 2 * cos(this.rad_theta + (120 / 180) * PI); 
+    let y2 = this.y + this.r / 2 * sin(this.rad_theta + (120 / 180) * PI); 
+
+    // 右舷
+    let x3 = this.x + this.r / 2 * cos(this.rad_theta - (120 / 180) * PI); 
+    let y3 = this.y + this.r / 2 * sin(this.rad_theta - (120 / 180) * PI); 
+
+    triangle(x1, y1, x2, y2, x3, y3);
+  }
+
+  move () {
+    // 方向転換とスピード計算
+    this.rudder(5);
+    this.set_speed(18);
+
+    // 座標移動
+    this.x += this.vx;
+    this.y += this.vy;
+
+    // 画面外に出たら、反対側にワープする
+    if (this.x > 660) this.x -= 660;
+    else if (this.x < 0) this.x += 660;
+    if (this.y > 500) this.y -= 500;
+    else if (this.y < 0) this.y += 500;
+
+  }
+
+  set_speed(_lim) {
+    // 速度をベクトルに加算
+    this.vx += this.a * cos(this.rad_theta);
+    this.vy += this.a * sin(this.rad_theta);
+
+    // 速度制限
+    let v = this.vx ** 2 + this.vy ** 2;
+    if (v > _lim ** 2) {
+      this.vx -= this.a * cos(this.rad_theta);
+      this.vy -= this.a * sin(this.rad_theta);
+    }
+
+    // 加減速
+    if (this.keys.isU) this.a = 0.5;
+    else {
+      this.a = 0;
+      this.vx *= 0.98;
+      this.vy *= 0.98;
+    }
+  }
+
+

@@ -1,13 +1,17 @@
+import Player from './player.js';
+
 // system
 let scene;
 let titleScn;
 let gameScn;
 
 // ---- system ----
-function setup() {
+window.setup = () => {
   let canvas = createCanvas(640, 480);
   canvas.parent("canvas");
   frameRate(60);
+
+  print("do");
 
   // system
   scene = "TITLE";
@@ -16,7 +20,7 @@ function setup() {
   gameScn = new GameScn();
 }
 
-function draw() {
+window.draw = () => {
   switch (scene) {
     case "TITLE":
       titleScn.display();
@@ -27,7 +31,7 @@ function draw() {
   }
 }
 
-function mousePressed() {
+window.mousePressed = () => {
   switch (scene) {
     case "TITLE":
       titleScn.mouse_pressed();
@@ -35,7 +39,7 @@ function mousePressed() {
   }
 }
 
-function keyPressed() {
+window.keyPressed = () => {
   switch(scene) {
     case "GAME":
       gameScn.key_pressed();
@@ -43,7 +47,7 @@ function keyPressed() {
   }
 }
 
-function keyReleased() {
+window.keyReleased = () => {
   switch(scene) {
     case "GAME":
       gameScn.key_released();
@@ -107,6 +111,7 @@ class GameScn {
 
 // ---- obj classe ----
 
+/*
 class Player {
   constructor(_x, _y, _deg_theta) {
     // pos
@@ -204,6 +209,7 @@ class Player {
   }
 }
 
+*/
 
 class Timer {
   constructor(_lim) {
@@ -328,7 +334,7 @@ class Asteroid {
   }
 }
  
-
+/*
 class Keys {
   constructor() {
     this.isL = false;
@@ -350,8 +356,10 @@ class Keys {
     if (key == 'd') this.isR = false;
   }
 }
+*/
 
 // ---- funcs----
+/*
 function rand(_low, _high) {
   return random() * high - _low;
 }
@@ -363,3 +371,4 @@ function deg_to_rad(_deg) {
 function rad_to_deg(_rad) {
   return _rad / PI * 180;
 }
+*/
