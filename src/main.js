@@ -120,7 +120,7 @@ class Player {
     
     // angle
     this.deg_theta = _deg_theta;
-    this.rad_theta = this.deg_to_rad(this.deg_theta);
+    this.rad_theta = deg_to_rad(this.deg_theta);
 
     this.r = 30;
 
@@ -150,7 +150,7 @@ class Player {
   move () {
     // 方向転換とスピード計算
     this.rudder(5);
-    this.set_speed(20);
+    this.set_speed(18);
 
     // 座標移動
     this.x += this.vx;
@@ -192,15 +192,7 @@ class Player {
     if (this.deg_theta > 180) this.deg_theta -= 360;
     else if (this.deg_theta < -180) this.deg_theta += 360;
 
-    this.rad_theta = this.deg_to_rad(this.deg_theta);
-  }
-
-  deg_to_rad(_deg) {
-    return _deg / 180 * PI;
-  }
-
-  rad_to_deg(_rad) {
-    return _rad / PI * 180;
+    this.rad_theta = deg_to_rad(this.deg_theta);
   }
 
   key_pressed() {
@@ -235,6 +227,7 @@ class Timer {
   }
 }
 
+
 class Particle {
   constructor(_x, _y, _theta) {
     this.x = _x;
@@ -254,7 +247,76 @@ class Particle {
     ellipse(this.x, this.r, this.r, this.r);
   }
 }
+
+
+class asteroid {
+  constructor(_x, _y, _type) {
+    this.x = _x;
+    this.y = _y;
+    this.type = _type;
+
+    // size
+    this.r = _type;
+
+    this.theta = 0;
+    this.dtheta = deg_to_rad((rand(-1, 1)/360));    // 回転演出用
+
+    // 隕石生成
+    this.cNum = random() * 4 + 3;
+    this.corners = [...Array(cNum)];
+    this.gn_astrd(this.cNum, this.corners);
+  }
+
+  display() {
+    display_astrd(this.cNum, this.corners);   
+  }
+
+  move() {
+  }
+
+  // 隕石を生成
+  gn_astrd(_cNum, _corners) {
+    let t = 0;
+    for (let i = 0; i < _cNum-1; i++) {
+      t += rand(0, 360/_cNum) + rand(-((360/_cNum)/2)/_cNum, ((360/_cNum)/2)/_cNum);   // ランダムに回転
+      _corners[i] = deg_to_rad(t);
+    }
+    _corners[cNum-1] = 0;
+  }
+
+  // 隕石を描画
+  display_astrd(_cNum, _corners) {
+    let scx, scy;
+    let dcx, dcy;
+
+    noFill();
+    stroke(255);
+    strokeWeight(2);
+
+    // lineを引く
+    for (let i = 0; i < cNum-1; i++) {
+      // src座標
+      scx = this.r * cos(_corners[i] + this.theta);
+      scy = this.r * sin(_corners[i] + this.theta);
+
+      // dst座標
+      dcx = this.r * cos(_corners[i+1] + this.theta);
+      dcy = this.r * sin(_corners[i+1] + this.theta);
+
+      line(scx, scy, dcx, dcy);
+    }
+    
+    // 多角形を閉じる
+    scx = this.r * cos(_corners[_cNum-1] + this.theta);
+    scy = this.r * sin(_corners[_cNum-1] + this.theta);
+    dcx = this.r * cos(_corners[0] + this.theta);
+    dcy = this.r * sin(_corners[0] + this.theta);
+
+    line(scx, scy, dcx, dcy);
+  }
+}
  
+
 class Keys {
   constructor() {
     this.isL = false;
@@ -275,4 +337,17 @@ class Keys {
     if (key == 's') this.isD = false;
     if (key == 'd') this.isR = false;
   }
+}
+
+// ---- funcs----
+function rand(_low, _high) {
+  return random() * high - _low;
+}
+
+function deg_to_rad(_deg) {
+  return _deg / 180 * PI;
+}
+
+function rad_to_deg(_rad) {
+  return _rad / PI * 180;
 }
