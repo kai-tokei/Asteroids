@@ -71,7 +71,7 @@ export default class Player {
     }
 
     // 加減速
-    if (this.keys.isU) this.a = 0.5;
+    if (this.keys.isU) this.a = 0.25;
     else {
       this.a = 0;
       this.vx *= 0.98;

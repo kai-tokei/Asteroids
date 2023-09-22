@@ -20,8 +20,8 @@ export default class Asteroid {
     this.dtheta = (random() * 1.5 - 1.25) * deg_to_rad(this.r / 10);    // 回転演出用
 
     // 隕石生成
-    this.cNum = Math.floor(random() * 2) + 4;
-    this.corners = [...Array(6)];
+    this.cNum = Math.floor(random() * 4) + 4;
+    this.corners = [...Array(8)];
     this.gn_astrd(Math.floor(random() * 0.5 - 0.5));
   }
 
@@ -37,10 +37,10 @@ export default class Asteroid {
     this.y += this.vy;
 
     // 画面外に出たら、反対側にワープする
-    if (this.x > 660) this.x -= 660;
-    else if (this.x < 0) this.x += 660;
-    if (this.y > 500) this.y -= 500;
-    else if (this.y < 0) this.y += 500;
+    if (this.x > 680) this.x -= 680;
+    else if (this.x < 0) this.x += 680;
+    if (this.y > 530) this.y -= 530;
+    else if (this.y < 0) this.y += 530;
   }
 
   set_speed() {
@@ -75,7 +75,7 @@ export default class Asteroid {
     let dcx, dcy;
 
     noFill();
-    stroke(255);
+    stroke(209, 217, 224);
     strokeWeight(2);
 
     // lineを引く
