@@ -1,7 +1,7 @@
 import Timer from './timer.js';
 import Player from './player.js';
 import Asteroid from './asteroid.js';
-import {move_objs, display_objs} from './func.js';
+import {move_objs, display_objs, gen_objs} from './func.js';
 
 // system
 var scene;
@@ -94,7 +94,8 @@ class GameScn {
 
     this.astrds = [...Array(30)];
     for (let i = 0; i < 30; i++) {
-      this.gen_astrd(this.astrds, 200, 200, 3, 20);
+      //this.gen_astrd(this.astrds, 200, 200, 3, 20);
+      gen_objs(this.astrds, new Asteroid(200, 200, 3, 20));
     }
   }
 
@@ -114,14 +115,5 @@ class GameScn {
 
   key_released() {
     this.player.key_released();
-  }
-
-  gen_astrd(_astrds, _x, _y, _v, _type) {
-    for (let i = 0; i < _astrds.length; i++) {
-      if (_astrds[i] == undefined) {
-        _astrds[i] = new Asteroid(_x, _y, _v, _type);
-        break;
-      }
-    }
   }
 }

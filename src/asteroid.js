@@ -23,6 +23,9 @@ export default class Asteroid {
     this.cNum = Math.floor(random() * 4) + 4;
     this.corners = [...Array(8)];
     this.gn_astrd(Math.floor(random() * 0.5 - 0.5));
+
+    // 存在
+    this.exist = true;
   }
 
   display() {
@@ -38,9 +41,9 @@ export default class Asteroid {
 
     // 画面外に出たら、反対側にワープする
     if (this.x > 680) this.x -= 680;
-    else if (this.x < 0) this.x += 680;
+    else if (this.x < -40) this.x += 680;
     if (this.y > 530) this.y -= 530;
-    else if (this.y < 0) this.y += 530;
+    else if (this.y < -40) this.y += 530;
   }
 
   set_speed() {
@@ -98,5 +101,16 @@ export default class Asteroid {
     dcy = this.y + this.r * sin(this.corners[0] + this.rtheta);
 
     line(scx, scy, dcx, dcy);
+  }
+
+  tch(_x, _y, _r) {
+    let dx = (_x - this.x) ** 2;
+    let dy = (_y - this.y) ** 2;
+    let dr = (_r + this.r) ** 2;
+
+    if (dx + dy < dr) {
+      return true;
+    }
+    else return false;
   }
 }

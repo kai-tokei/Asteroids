@@ -26,3 +26,20 @@ export function display_objs(_objs) {
     }
   }
 }
+
+export function destroy_objs(_objs) {
+  for (let i = 0; i < _objs.length; i++) {
+    if (_objs[i] != undefined) {
+      if (!_objs[i].exist) _objs[i] = undefined;
+    }
+  }
+}
+
+export function gen_objs(_objs, _class) {
+  for (let i = 0; i < _objs.length; i++) {
+    if (_objs[i] == undefined) {
+      _objs[i] = _class;
+      break;
+    }
+  }
+}

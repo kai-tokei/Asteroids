@@ -54,7 +54,7 @@ export default class Player {
     if (this.x > 660) this.x -= 660;
     else if (this.x < 0) this.x += 660;
     if (this.y > 500) this.y -= 500;
-    else if (this.y < 0) this.y += 500;
+    else if (this.y < -20) this.y += 500;
 
   }
 
