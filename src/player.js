@@ -1,5 +1,7 @@
-import {rand, deg_to_rad, rad_to_deg} from './func.js';
+import {rand, deg_to_rad, rad_to_deg, gen_objs} from './func.js';
 import Keys from './keys.js';
+import Bullet from './bullet.js';
+import Timer from './timer.js';
 
 export default class Player {
   constructor(_x, _y, _deg_theta) {
@@ -19,11 +21,14 @@ export default class Player {
     this.r = 30;
 
     this.keys = new Keys();
+
+    //bullet
+    this.interval = new Timer(10);
   }
 
   display() {
     noFill();
-    stroke(255);
+    stroke(235, 63, 63);
     strokeWeight(2);
 
     // playerが向いている方向
@@ -56,6 +61,8 @@ export default class Player {
     if (this.y > 500) this.y -= 500;
     else if (this.y < -20) this.y += 500;
 
+    // 弾丸の装填時間の計算
+    if (!this.interval.state) this.interval.cnt();
   }
 
   set_speed(_lim) {
@@ -96,6 +103,16 @@ export default class Player {
   key_released() {
     this.keys.key_released();
   }
+
+  fire(_bullets) {
+    if (this.keys.isS && this.interval.state) {
+      let x = this.x + this.r * cos(this.rad_theta);
+      let y = this.y + this.r * sin(this.rad_theta);
+      let theta = this.rad_theta;
+
+      gen_objs(_bullets, new Bullet(x, y, theta));
+      this.interval.reset_timer();
+    }
+  }
+
 }
-
-

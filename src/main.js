@@ -1,6 +1,7 @@
 import Timer from './timer.js';
 import Player from './player.js';
 import Asteroid from './asteroid.js';
+import Bullet from './bullet.js';
 import {move_objs, display_objs, gen_objs} from './func.js';
 
 // system
@@ -90,23 +91,41 @@ class TitleScn {
 
 class GameScn {
   constructor() {
+    // player
     this.player = new Player(100, 100, 0);
 
+    // asteroids
     this.astrds = [...Array(30)];
     for (let i = 0; i < 30; i++) {
-      //this.gen_astrd(this.astrds, 200, 200, 3, 20);
       gen_objs(this.astrds, new Asteroid(200, 200, 3, 20));
     }
+
+    // bullets
+    this.bullets = [...Array(10)];
   }
 
   display() {
     background(33, 39, 46);
 
+    // player
     this.player.display();
     this.player.move();
+    this.player.fire(this.bullets);
 
+    // asteroids
     display_objs(this.astrds);
     move_objs(this.astrds);
+
+    // bullets
+    display_objs(this.bullets);
+    move_objs(this.bullets);
+    this.destroy_bullet();
+
+    let a = 0;
+    for (let i = 0; i < this.bullets.length; i++) {
+      if (this.bullets[i] != undefined) a++;
+    }
+    text(a, 400, 100);
   }
 
   key_pressed() {
@@ -116,4 +135,17 @@ class GameScn {
   key_released() {
     this.player.key_released();
   }
+
+  destroy_bullet() {
+    for (let i = 0; i < this.bullets.length; i++) {
+      let blt = this.bullets[i];
+      if (blt != undefined) {
+        if (!blt.exist) {
+          this.bullets[i] = undefined;
+          print("destroy");
+        }
+      }
+    }
+  }
+
 }
