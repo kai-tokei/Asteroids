@@ -2,7 +2,7 @@ import Timer from './timer.js';
 import Player from './player.js';
 import Asteroid from './asteroid.js';
 import Bullet from './bullet.js';
-import {move_objs, display_objs, gen_objs} from './func.js';
+import {move_objs, display_objs, gen_objs, deg_to_rad} from './func.js';
 
 // system
 var scene;
@@ -60,7 +60,7 @@ window.keyReleased = () => {
 
 class TitleScn {
   constructor() {
-    this.titleChr = loadImage("../img/title.png");
+    this.titleChr = loadImage("../img/asteroids.png");
     this.clickToStart = loadImage("../img/clicktostart.png");
     this.timer = new Timer(30);
   }
@@ -92,7 +92,7 @@ class TitleScn {
 class GameScn {
   constructor() {
     // player
-    this.player = new Player(100, 100, 0);
+    this.player = new Player(320, 240, -90);
 
     // asteroids
     this.astrds = [...Array(1000)];
