@@ -23,7 +23,7 @@ export default class Player {
     this.keys = new Keys();
 
     //bullet
-    this.interval = new Timer(10);
+    this.interval = new Timer(8);
   }
 
   display() {
