@@ -95,9 +95,9 @@ class GameScn {
     this.player = new Player(100, 100, 0);
 
     // asteroids
-    this.astrds = [...Array(30)];
-    for (let i = 0; i < 30; i++) {
-      gen_objs(this.astrds, new Asteroid(200, 200, 3, 3));
+    this.astrds = [...Array(1000)];
+    for (let i = 0; i < 10; i++) {
+      gen_objs(this.astrds, new Asteroid(200, 200, 1, 3));
     }
 
     // bullets
@@ -149,6 +149,15 @@ class GameScn {
       let ast = this.astrds[i];
       if (ast != undefined) {
         if (!ast.exist) {
+          if (this.astrds[i].type > 0) {
+            let ax = this.astrds[i].x;
+            let ay = this.astrds[i].y;
+            let av = this.astrds[i].v;
+            let at = this.astrds[i].type;
+
+            gen_objs(this.astrds, new Asteroid(ax, ay, av*2, at-1))
+            gen_objs(this.astrds, new Asteroid(ax, ay, av*2, at-1))
+          }
           this.astrds[i] = undefined;
         }
       }
@@ -164,7 +173,10 @@ class GameScn {
         let br = this.bullets[i].r;
 
         for (let j = 0; j < this.astrds.length; j++) {
-          if (this.astrds[j] != undefined) this.astrds[j].tch_blt(bx, by, br);
+          if (this.astrds[j] != undefined) {
+            this.astrds[j].tch_blt(bx, by, br);
+            if (!this.astrds[j].exist) this.bullets[i] = undefined;
+          }
         }
       }
     }

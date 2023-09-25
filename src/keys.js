@@ -7,18 +7,18 @@ export default class Keys {
   }
 
   key_pressed() {
-    if (key == 'w') this.isU = true;
-    if (key == 'a') this.isL = true;
-    if (key == 's') this.isD = true;
-    if (key == 'd') this.isR = true;
+    if (keyCode == UP_ARROW) this.isU = true;
+    if (keyCode == LEFT_ARROW) this.isL = true;
+    if (keyCode == DOWN_ARROW) this.isD = true;
+    if (keyCode == RIGHT_ARROW) this.isR = true;
     if (key == ' ') this.isS = true;
   }
 
   key_released() {
-    if (key == 'w') this.isU = false;
-    if (key == 'a') this.isL = false;
-    if (key == 's') this.isD = false;
-    if (key == 'd') this.isR = false;
+    if (keyCode == UP_ARROW) this.isU = false;
+    if (keyCode == LEFT_ARROW) this.isL = false;
+    if (keyCode == DOWN_ARROW) this.isD = false;
+    if (keyCode == RIGHT_ARROW) this.isR = false;
     if (key == ' ') this.isS = false;
   }
 }
