@@ -48,7 +48,7 @@ export default class Player {
 
   move () {
     // 方向転換とスピード計算
-    this.rudder(5);
+    this.rudder(8);
     this.set_speed(18);
 
     // 座標移動
@@ -78,7 +78,7 @@ export default class Player {
     }
 
     // 加減速
-    if (this.keys.isU) this.a = 0.25;
+    if (this.keys.isU) this.a = 0.35;
     else {
       this.a = 0;
       this.vx *= 0.98;

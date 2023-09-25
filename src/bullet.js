@@ -28,7 +28,6 @@ export default class Bullet {
     this.y += this.vy;
 
     if (this.timer.cnt()) this.exist = false;
-    print("move: " + this.x);
   }
 
   set_speed() {

@@ -97,7 +97,7 @@ class GameScn {
     // asteroids
     this.astrds = [...Array(30)];
     for (let i = 0; i < 30; i++) {
-      gen_objs(this.astrds, new Asteroid(200, 200, 3, 20));
+      gen_objs(this.astrds, new Asteroid(200, 200, 3, 3));
     }
 
     // bullets
@@ -116,16 +116,13 @@ class GameScn {
     display_objs(this.astrds);
     move_objs(this.astrds);
 
+    this.destroy_asteroid();
+    this.tch_asteroid();
+
     // bullets
     display_objs(this.bullets);
     move_objs(this.bullets);
     this.destroy_bullet();
-
-    let a = 0;
-    for (let i = 0; i < this.bullets.length; i++) {
-      if (this.bullets[i] != undefined) a++;
-    }
-    text(a, 400, 100);
   }
 
   key_pressed() {
@@ -142,7 +139,32 @@ class GameScn {
       if (blt != undefined) {
         if (!blt.exist) {
           this.bullets[i] = undefined;
-          print("destroy");
+        }
+      }
+    }
+  }
+
+  destroy_asteroid() {
+    for (let i = 0; i < this.astrds.length; i++) {
+      let ast = this.astrds[i];
+      if (ast != undefined) {
+        if (!ast.exist) {
+          this.astrds[i] = undefined;
+        }
+      }
+    }
+  }
+
+  tch_asteroid() {
+    for (let i = 0; i < this.bullets.length; i++) {
+      // 弾の座標
+      if (this.bullets[i] != undefined) {
+        let bx = this.bullets[i].x;
+        let by = this.bullets[i].y;
+        let br = this.bullets[i].r;
+
+        for (let j = 0; j < this.astrds.length; j++) {
+          if (this.astrds[j] != undefined) this.astrds[j].tch_blt(bx, by, br);
         }
       }
     }

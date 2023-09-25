@@ -12,7 +12,8 @@ export default class Asteroid {
     this.vy;
 
     // size
-    this.r = _type; // 暫定的にtypeと置いておく
+    this.r = 0;
+
 
     //this.theta = deg_to_rad(rand(0, 360));
     this.theta = deg_to_rad(random() * 360);
@@ -26,6 +27,9 @@ export default class Asteroid {
 
     // 存在
     this.exist = true;
+
+    // 当たり判定
+    this.tch = false;
   }
 
   display() {
@@ -53,6 +57,22 @@ export default class Asteroid {
 
   // 隕石を生成
   gn_astrd() {
+    // 大きさを指定
+    switch(this.type) {
+      case 0:
+        this.r = 10;
+        break;
+      case 1:
+        this.r = 20;
+        break;
+      case 2:
+        this.r = 30;
+        break;
+      case 3:
+        this.r = 40;
+        break;
+    }
+
     let t = 0;
     let d = 360 / this.cNum;
     for (let i = 0; i < this.cNum; i++) {
@@ -103,14 +123,16 @@ export default class Asteroid {
     line(scx, scy, dcx, dcy);
   }
 
-  tch(_x, _y, _r) {
+  tch_blt(_x, _y, _r) {
     let dx = (_x - this.x) ** 2;
     let dy = (_y - this.y) ** 2;
     let dr = (_r + this.r) ** 2;
 
-    if (dx + dy < dr) {
-      return true;
+    if (dx + dy > dr) {
+      this.exist = true;
     }
-    else return false;
+    else this.exist = false;
   }
+
 }
+
