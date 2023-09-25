@@ -2,7 +2,7 @@ import Timer from './timer.js';
 import Player from './player.js';
 import Asteroid from './asteroid.js';
 import Bullet from './bullet.js';
-import {move_objs, display_objs, gen_objs, deg_to_rad} from './func.js';
+import {move_objs, display_objs, gen_objs, deg_to_rad, rand} from './func.js';
 
 // system
 var scene;
@@ -63,11 +63,24 @@ class TitleScn {
     this.titleChr = loadImage("../img/asteroids.png");
     this.clickToStart = loadImage("../img/clicktostart.png");
     this.timer = new Timer(30);
+
+    // お飾りの小惑星
+    this.astrds = [...Array(30)];
+    for (let i = 0; i < 20; i++) {
+      gen_objs(
+        this.astrds,
+        new Asteroid(Math.floor(
+          rand(0, 640)), Math.floor(rand(0, 480)), Math.floor(1, 4), Math.floor(rand(0, 3))
+        )
+      );
+    }
   }
 
   display() {
     background(33, 39, 46);
     
+    display_objs(this.astrds);
+    move_objs(this.astrds);
     this.display_text();
     this.display_click_to_start();
   }
@@ -93,6 +106,8 @@ class GameScn {
   constructor() {
     // player
     this.player = new Player(320, 240, -90);
+    this.life = 3;
+    this.score = 0;
 
     // asteroids
     this.astrds = [...Array(1000)];
@@ -115,7 +130,6 @@ class GameScn {
     // asteroids
     display_objs(this.astrds);
     move_objs(this.astrds);
-
     this.destroy_asteroid();
     this.tch_asteroid();
 
@@ -150,6 +164,7 @@ class GameScn {
       if (ast != undefined) {
         if (!ast.exist) {
           if (this.astrds[i].type > 0) {
+            // 小惑星の周辺情報
             let ax = this.astrds[i].x;
             let ay = this.astrds[i].y;
             let av = this.astrds[i].v;
@@ -166,8 +181,8 @@ class GameScn {
 
   tch_asteroid() {
     for (let i = 0; i < this.bullets.length; i++) {
-      // 弾の座標
       if (this.bullets[i] != undefined) {
+        // 弾の座標
         let bx = this.bullets[i].x;
         let by = this.bullets[i].y;
         let br = this.bullets[i].r;
@@ -180,6 +195,10 @@ class GameScn {
         }
       }
     }
+  }
+
+  display_life() {
+
   }
 
 }
