@@ -2,6 +2,7 @@ import {rand, deg_to_rad, rad_to_deg, gen_objs} from './func.js';
 import Keys from './keys.js';
 import Bullet from './bullet.js';
 import Timer from './timer.js';
+import Effect from './effect.js';
 
 export default class Player {
   constructor(_x, _y, _deg_theta) {
@@ -24,6 +25,9 @@ export default class Player {
 
     //bullet
     this.interval = new Timer(8);
+
+    // effect
+    this.jet = [...Array(10)];
   }
 
   display() {
