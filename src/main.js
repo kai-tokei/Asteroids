@@ -111,7 +111,7 @@ class GameScn {
     this.score = 0;
 
     // asteroids
-    this.astrds = [...Array(1000)];
+    this.astrds = [...Array(10000)];
     for (let i = 0; i < 10; i++) {
       gen_objs(this.astrds, new Asteroid(200, 200, 1, 3));
     }
@@ -192,10 +192,14 @@ class GameScn {
         let by = this.bullets[i].y;
         let br = this.bullets[i].r;
 
+        // 弾と衝突したら、オブジェクトを除外
         for (let j = 0; j < this.astrds.length; j++) {
           if (this.astrds[j] != undefined) {
             this.astrds[j].tch_blt(bx, by, br);
-            if (!this.astrds[j].exist) this.bullets[i] = undefined;
+            if (!this.astrds[j].exist) {
+              this.bullets[i] = undefined;
+              this.score++;
+            }
           }
         }
       }
@@ -215,4 +219,5 @@ class GameScn {
     textSize(20);
     text("score: " + this.score, 25, 25);
   }
+
 }
