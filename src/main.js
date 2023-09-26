@@ -56,7 +56,7 @@ window.keyReleased = () => {
   }
 }
 
-// ---- scnes ----
+// ---- scenes ----
 
 class TitleScn {
   constructor() {
@@ -95,7 +95,7 @@ class TitleScn {
       image(this.clickToStart, -20, 0);
     }
   }
- 
+
   mouse_pressed() {
     scene = "GAME";
   }
@@ -159,7 +159,7 @@ class GameScn {
   destroy_bullet() {
     for (let i = 0; i < this.bullets.length; i++) {
       let blt = this.bullets[i];
-      if (blt != undefined) {
+      if (blt !== undefined) {
         if (!blt.exist) {
           this.bullets[i] = undefined;
         }
@@ -170,7 +170,7 @@ class GameScn {
   destroy_asteroid() {
     for (let i = 0; i < this.astrds.length; i++) {
       let ast = this.astrds[i];
-      if (ast != undefined) {
+      if (ast !== undefined) {
         if (!ast.exist) {
           if (this.astrds[i].type > 0) {
             // 小惑星の周辺情報
@@ -191,7 +191,7 @@ class GameScn {
 
   tch_asteroid() {
     for (let i = 0; i < this.bullets.length; i++) {
-      if (this.bullets[i] != undefined) {
+      if (this.bullets[i] !== undefined) {
         // 弾の座標
         let bx = this.bullets[i].x;
         let by = this.bullets[i].y;
