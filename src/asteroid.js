@@ -7,9 +7,9 @@ export default class Asteroid {
     this.type = _type;
 
     // speed
-    this.v = 2;
-    this.vx;
-    this.vy;
+    this.v = 1;
+    this.vx = 0;
+    this.vy = 0;
 
     // size
     this.r = 0;

@@ -7,14 +7,14 @@ export default class Bullet {
     this.theta = _theta;
     this.r = 5;
 
-    this.v = 20;
+    this.v = 10;
     this.vx;
     this.vy;
     this.set_speed();
 
     this.exist = true;
 
-    this.timer = new Timer(10);
+    this.timer = new Timer(20);
   }
 
   display() {

@@ -5,7 +5,7 @@ import Bullet from './bullet.js';
 import {move_objs, display_objs, gen_objs, deg_to_rad, rand} from './func.js';
 
 // system
-var scene;
+let scene;
 let titleScn;
 let gameScn;
 
@@ -62,7 +62,7 @@ class TitleScn {
   constructor() {
     this.titleChr = loadImage("../img/asteroids.png");
     this.clickToStart = loadImage("../img/clicktostart.png");
-    this.timer = new Timer(30);
+    this.timer = new Timer(60);
 
     // お飾りの小惑星
     this.astrds = [...Array(30)];
@@ -91,7 +91,7 @@ class TitleScn {
 
   display_click_to_start() {
     this.timer.cnt();
-    if (this.timer.time < 20) {
+    if (this.timer.time < 50) {
       image(this.clickToStart, -20, 0);
     }
   }
@@ -118,6 +118,10 @@ class GameScn {
 
     // bullets
     this.bullets = [...Array(10)];
+
+    // sounds
+    this.hitSnd = loadSound('../snd/hit.wav');
+    this.fireSnd = loadSound('../snd/fire.wav');
   }
 
   display() {
@@ -178,6 +182,7 @@ class GameScn {
             gen_objs(this.astrds, new Asteroid(ax, ay, av*2, at-1))
             gen_objs(this.astrds, new Asteroid(ax, ay, av*2, at-1))
           }
+          this.hitSnd.play();
           this.astrds[i] = undefined;
         }
       }
@@ -194,11 +199,11 @@ class GameScn {
 
         // 弾と衝突したら、オブジェクトを除外
         for (let j = 0; j < this.astrds.length; j++) {
-          if (this.astrds[j] != undefined) {
+          if (this.astrds[j] !== undefined) {
             this.astrds[j].tch_blt(bx, by, br);
             if (!this.astrds[j].exist) {
+              if (this.astrds[j].type === 0) this.score++;
               this.bullets[i] = undefined;
-              this.score++;
             }
           }
         }

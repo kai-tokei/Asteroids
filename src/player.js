@@ -24,10 +24,13 @@ export default class Player {
     this.keys = new Keys();
 
     //bullet
-    this.interval = new Timer(8);
+    this.interval = new Timer(25);
 
     // effect
     this.jet = [...Array(10)];
+
+    // sound
+    this.fireSnd = loadSound('../snd/fire.wav');
   }
 
   display() {
@@ -52,8 +55,8 @@ export default class Player {
 
   move () {
     // 方向転換とスピード計算
-    this.rudder(8);
-    this.set_speed(18);
+    this.rudder(4);
+    this.set_speed(10);
 
     // 座標移動
     this.x += this.vx;
@@ -82,7 +85,7 @@ export default class Player {
     }
 
     // 加減速
-    if (this.keys.isU) this.a = 0.35;
+    if (this.keys.isU) this.a = 0.1;
     else {
       this.a = 0;
       this.vx *= 0.98;
@@ -110,6 +113,8 @@ export default class Player {
 
   fire(_bullets) {
     if (this.keys.isS && this.interval.state) {
+      this.fireSnd.play();
+
       let x = this.x + this.r * cos(this.rad_theta);
       let y = this.y + this.r * sin(this.rad_theta);
       let theta = this.rad_theta;
