@@ -107,6 +107,7 @@ class GameScn {
     // player
     this.player = new Player(320, 240, -90);
     this.life = 3;
+    this.lifeGauge = [...Array(this.life)];
     this.score = 0;
 
     // asteroids
@@ -137,6 +138,10 @@ class GameScn {
     display_objs(this.bullets);
     move_objs(this.bullets);
     this.destroy_bullet();
+
+    // system
+    this.display_life();
+    this.display_score();
   }
 
   key_pressed() {
@@ -198,7 +203,16 @@ class GameScn {
   }
 
   display_life() {
-
+    for (let i = 0; i < this.lifeGauge.length; i++) {
+      this.lifeGauge[i] = new Player(550 + i * 32, 35, -90);
+    }
+    display_objs(this.lifeGauge);
   }
 
+  display_score() {
+    noStroke();
+    fill(255);
+    textSize(20);
+    text("score: " + this.score, 25, 25);
+  }
 }
