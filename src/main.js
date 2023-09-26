@@ -104,6 +104,9 @@ class TitleScn {
 
 class GameScn {
   constructor() {
+    // system
+    this.state = "TUTORIAL";
+
     // player
     this.player = new Player(320, 240, -90);
     this.life = 3;
@@ -121,10 +124,20 @@ class GameScn {
 
     // sounds
     this.hitSnd = loadSound('../snd/hit.wav');
-    this.fireSnd = loadSound('../snd/fire.wav');
   }
 
   display() {
+    switch (this.state) {
+      case "GAME":
+        this.game_state();
+        break;
+      case "TUTORIAL":
+        this.tutorial_state();
+        break;
+    }
+  }
+
+  game_state() {
     background(33, 39, 46);
 
     // player
@@ -137,6 +150,24 @@ class GameScn {
     move_objs(this.astrds);
     this.destroy_asteroid();
     this.tch_asteroid();
+
+    // bullets
+    display_objs(this.bullets);
+    move_objs(this.bullets);
+    this.destroy_bullet();
+
+    // system
+    this.display_life();
+    this.display_score();
+  }
+
+  tutorial_state() {
+    background(33, 39, 46);
+
+    // player
+    this.player.display();
+    this.player.move();
+    this.player.fire(this.bullets);
 
     // bullets
     display_objs(this.bullets);
@@ -182,8 +213,8 @@ class GameScn {
             gen_objs(this.astrds, new Asteroid(ax, ay, av*2, at-1))
             gen_objs(this.astrds, new Asteroid(ax, ay, av*2, at-1))
           }
-          this.hitSnd.play();
-          this.astrds[i] = undefined;
+          this.hitSnd.play(); // 効果音の再生
+          this.astrds[i] = undefined; // 削除
         }
       }
     }
