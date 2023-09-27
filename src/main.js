@@ -106,6 +106,8 @@ class GameScn {
   constructor() {
     // system
     this.state = "TUTORIAL";
+    this.level = 0;
+    this.timer = new Timer(180);
 
     // player
     this.player = new Player(320, 240, -90);
@@ -115,9 +117,6 @@ class GameScn {
 
     // asteroids
     this.astrds = [...Array(10000)];
-    for (let i = 0; i < 10; i++) {
-      gen_objs(this.astrds, new Asteroid(200, 200, 1, 3));
-    }
 
     // bullets
     this.bullets = [...Array(10)];
@@ -131,9 +130,11 @@ class GameScn {
       case "GAME":
         this.game_state();
         break;
-      case "TUTORIAL":
+      case "TUTORIAL":  // 後で作る
         this.tutorial_state();
         break;
+      case "NEXT_LEVEL":
+        this.next_level_state();
     }
   }
 
@@ -174,9 +175,53 @@ class GameScn {
     move_objs(this.bullets);
     this.destroy_bullet();
 
+
     // system
     this.display_life();
     this.display_score();
+  }
+
+  next_level_state() {
+    background(33, 39, 46);
+
+    // player
+    this.player.display();
+
+    // bullets
+    display_objs(this.bullets);
+
+    // asteroids
+    display_objs(this.astrds);
+
+    // system
+    this.display_life();
+    this.display_score();
+    this.display_level();
+
+    // 小惑星の生成
+    if (!this.timer.time) this.gen_astrds();
+
+    // 一定時間経過後に、next level
+    if (this.timer.cnt()) {
+      this.state = "GAME";
+      this.level++;
+    }
+  }
+
+  gen_astrds() {
+    let num = 1.5 ** this.level;
+    for (let i = 0; i < num; i++) {
+      let ax = Math.floor(random() * 640);
+      let ay = Math.floor(random() * 480);
+
+      gen_objs(new Asteroid(ax, ay, 1, 3));
+    }
+  }
+
+  display_level() {
+    noStroke();
+    fill(235, 64, 52);
+    textSize(32);
   }
 
   key_pressed() {

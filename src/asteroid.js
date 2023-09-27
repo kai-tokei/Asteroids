@@ -14,7 +14,6 @@ export default class Asteroid {
     // size
     this.r = 0;
 
-
     //this.theta = deg_to_rad(rand(0, 360));
     this.theta = deg_to_rad(random() * 360);
     this.rtheta = 0;
@@ -27,6 +26,9 @@ export default class Asteroid {
 
     // 存在
     this.exist = true;
+
+    // 誕生
+    this.birth = true;
 
     // 当たり判定
     this.tch = false;
