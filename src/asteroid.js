@@ -1,4 +1,5 @@
 import {rand, deg_to_rad, rad_to_deg} from './func.js';
+import Timer from './timer.js';
 
 export default class Asteroid {
   constructor(_x, _y, _v, _type) {
@@ -29,6 +30,7 @@ export default class Asteroid {
 
     // 誕生
     this.birth = true;
+    this.birthTime = new Timer(60);
 
     // 当たり判定
     this.tch = false;
@@ -100,7 +102,11 @@ export default class Asteroid {
     let dcx, dcy;
 
     noFill();
-    stroke(209, 217, 224);
+    if (this.birth) {
+      stroke(209, 217, 224, this.birthTime.time * 4);
+      if (this.birthTime.cnt()) this.birth = false
+    }
+    else stroke(209, 217, 224);
     strokeWeight(2);
 
     // lineを引く

@@ -105,7 +105,7 @@ class TitleScn {
 class GameScn {
   constructor() {
     // system
-    this.state = "TUTORIAL";
+    this.state = "NEXT_LEVEL";
     this.level = 0;
     this.timer = new Timer(180);
 
@@ -199,7 +199,7 @@ class GameScn {
     this.display_level();
 
     // 小惑星の生成
-    if (!this.timer.time) this.gen_astrds();
+    if (this.timer.time === 0) this.gen_astrds();
 
     // 一定時間経過後に、next level
     if (this.timer.cnt()) {
@@ -214,7 +214,7 @@ class GameScn {
       let ax = Math.floor(random() * 640);
       let ay = Math.floor(random() * 480);
 
-      gen_objs(new Asteroid(ax, ay, 1, 3));
+      gen_objs(this.astrds, new Asteroid(ax, ay, 1, 3));
     }
   }
 
