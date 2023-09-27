@@ -110,7 +110,7 @@ class GameScn {
     this.timer = new Timer(180);
 
     // player
-    this.player = new Player(320, 240, -90);
+    this.player = new Player(320, 280, -90);
     this.life = 3;
     this.lifeGauge = [...Array(this.life)];
     this.score = 0;
@@ -186,6 +186,7 @@ class GameScn {
 
     // player
     this.player.display();
+    this.player.move();
 
     // bullets
     display_objs(this.bullets);
@@ -220,8 +221,11 @@ class GameScn {
 
   display_level() {
     noStroke();
-    fill(235, 64, 52);
-    textSize(32);
+    fill(255);
+    textSize(62);
+    textStyle(BOLDITALIC);
+
+    text("LEVEL " + this.level, 175, 200);
   }
 
   key_pressed() {

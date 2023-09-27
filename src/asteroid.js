@@ -138,8 +138,7 @@ export default class Asteroid {
 
     if (dx + dy > dr) {
       this.exist = true;
-    }
-    else this.exist = false;
+    } else this.exist = false;
   }
 
 }
