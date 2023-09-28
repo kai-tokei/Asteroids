@@ -25,12 +25,6 @@ export default class Player {
 
     //bullet
     this.interval = new Timer(25);
-
-    // effect
-    this.jet = [...Array(10)];
-
-    // sound
-    this.fireSnd = loadSound('../snd/fire.wav');
   }
 
   display() {
@@ -113,7 +107,6 @@ export default class Player {
 
   fire(_bullets) {
     if (this.keys.isS && this.interval.state) {
-      this.fireSnd.play();
 
       let x = this.x + this.r * cos(this.rad_theta);
       let y = this.y + this.r * sin(this.rad_theta);

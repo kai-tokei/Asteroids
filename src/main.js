@@ -120,9 +120,6 @@ class GameScn {
 
     // bullets
     this.bullets = [...Array(10)];
-
-    // sounds
-    this.hitSnd = loadSound('../snd/hit.wav');
   }
 
   display() {
@@ -160,6 +157,7 @@ class GameScn {
     // system
     this.display_life();
     this.display_score();
+    this.check_all_asteroids();
   }
 
   tutorial_state() {
@@ -174,7 +172,6 @@ class GameScn {
     display_objs(this.bullets);
     move_objs(this.bullets);
     this.destroy_bullet();
-
 
     // system
     this.display_life();
@@ -236,6 +233,14 @@ class GameScn {
     this.player.key_released();
   }
 
+  check_all_asteroids() {
+    let f = false;
+    for (let i = 0; i < this.astrds.length; i++) {
+      if (this.astrds[i] !== undefined) f = true;
+    }
+    if (!f) this.state = "NEXT_LEVEL";
+  }
+
   destroy_bullet() {
     for (let i = 0; i < this.bullets.length; i++) {
       let blt = this.bullets[i];
@@ -262,7 +267,6 @@ class GameScn {
             gen_objs(this.astrds, new Asteroid(ax, ay, av*2, at-1))
             gen_objs(this.astrds, new Asteroid(ax, ay, av*2, at-1))
           }
-          this.hitSnd.play(); // 効果音の再生
           this.astrds[i] = undefined; // 削除
         }
       }
