@@ -131,7 +131,7 @@ export default class Asteroid {
     line(scx, scy, dcx, dcy);
   }
 
-  tch_blt(_x, _y, _r) {
+  tch_obj(_x, _y, _r) {
     let dx = (_x - this.x) ** 2;
     let dy = (_y - this.y) ** 2;
     let dr = (_r + this.r) ** 2;

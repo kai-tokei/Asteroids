@@ -19,17 +19,24 @@ export default class Player {
     this.deg_theta = _deg_theta;
     this.rad_theta = deg_to_rad(this.deg_theta);
 
+    // size
     this.r = 30;
-
-    this.keys = new Keys();
 
     //bullet
     this.interval = new Timer(25);
+
+    // system
+    this.exist = true;
+    this.keys = new Keys();
   }
 
   display() {
     noFill();
-    stroke(235, 63, 63);
+    if (!this.exist) {  // 無敵時間に、点滅させる
+      if (Math.floor(random() * 2 + 1) % 2) noStroke();
+      else stroke(235, 63, 63);
+    }
+    else stroke(235, 63, 63);
     strokeWeight(2);
 
     // playerが向いている方向
@@ -117,4 +124,13 @@ export default class Player {
     }
   }
 
+  tch_obj(_x, _y, _r) {
+    let dx = (_x - this.x) ** 2;
+    let dy = (_y - this.y) ** 2;
+    let dr = (_r + this.r) ** 2;
+
+    if (dx + dy > dr) {
+      this.exist = true;
+    } else this.exist = false;
+  }
 }

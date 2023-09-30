@@ -37,11 +37,14 @@ window.mousePressed = () => {
     case "TITLE":
       titleScn.mouse_pressed(scene);
       break;
+    case "GAME":
+      gameScn.mouse_pressed();
+      break;
   }
 }
 
 window.keyPressed = () => {
-  switch(scene) {
+  switch (scene) {
     case "GAME":
       gameScn.key_pressed();
       break;
@@ -49,14 +52,14 @@ window.keyPressed = () => {
 }
 
 window.keyReleased = () => {
-  switch(scene) {
+  switch (scene) {
     case "GAME":
       gameScn.key_released();
       break;
   }
 }
 
-// ---- scenes ----
+//---- scenes ----
 
 class TitleScn {
   constructor() {
@@ -68,17 +71,17 @@ class TitleScn {
     this.astrds = [...Array(30)];
     for (let i = 0; i < 20; i++) {
       gen_objs(
-        this.astrds,
-        new Asteroid(Math.floor(
-          rand(0, 640)), Math.floor(rand(0, 480)), Math.floor(1, 4), Math.floor(rand(0, 3))
-        )
+          this.astrds,
+          new Asteroid(Math.floor(
+              rand(0, 640)), Math.floor(rand(0, 480)), Math.floor(1, 4), Math.floor(rand(0, 3))
+          )
       );
     }
   }
 
   display() {
     background(33, 39, 46);
-    
+
     display_objs(this.astrds);
     move_objs(this.astrds);
     this.display_text();
@@ -108,12 +111,15 @@ class GameScn {
     this.state = "NEXT_LEVEL";
     this.level = 0;
     this.timer = new Timer(180);
+    this.retryTimer = new Timer(60);
+    this.clickToStart = loadImage("../img/clicktostart.png");
 
     // player
     this.player = new Player(320, 280, -90);
     this.life = 3;
-    this.lifeGauge = [...Array(this.life)];
     this.score = 0;
+    this.comeup = new Timer(180);
+    this.lifeGauge = [...Array(this.life)];
 
     // asteroids
     this.astrds = [...Array(10000)];
@@ -132,6 +138,10 @@ class GameScn {
         break;
       case "NEXT_LEVEL":
         this.next_level_state();
+        break;
+      case "RETRY":
+        this.retry_state();
+        break;
     }
   }
 
@@ -141,7 +151,13 @@ class GameScn {
     // player
     this.player.display();
     this.player.move();
-    this.player.fire(this.bullets);
+    if (this.player.exist) {
+      this.tch_player();
+      this.player.fire(this.bullets);
+    } // 一定時間経過後に、再表示させる
+    else {
+      if (this.comeup.cnt()) this.player.exist = true;
+    }
 
     // asteroids
     display_objs(this.astrds);
@@ -206,7 +222,72 @@ class GameScn {
     }
   }
 
-  gen_astrds() {
+  retry_state() {
+    background(33, 39, 46);
+
+    // asteroids
+    display_objs(this.astrds);
+    move_objs(this.astrds);
+
+    // system
+    this.display_score();
+    this.display_retry();
+    this.display_click_to_start();
+  }
+
+
+  key_pressed(){
+    this.player.key_pressed();
+  }
+
+  key_released(){
+    this.player.key_released();
+  }
+
+  mouse_pressed() {
+    if(this.state === "RETRY") {
+      this.reset_game();
+      this.state = "GAME";
+      print("change state");
+    }
+  }
+
+  display_click_to_start() {
+    this.retryTimer.cnt();
+    if (this.retryTimer.time < 50) {
+      image(this.clickToStart, -20, 0);
+    }
+  }
+
+  reset_game() {
+    this.level = 0;
+    this.timer = new Timer(180);
+    this.retryTimer = new Timer(60);
+
+    // player
+    this.player = new Player(320, 280, -90);
+    this.life = 3;
+    this.score = 0;
+    this.comeup = new Timer(180);
+    this.lifeGauge = [...Array(this.life)];
+
+    // asteroids
+    this.astrds = [...Array(10000)];
+
+    // bullets
+    this.bullets = [...Array(10)];
+  }
+
+  display_retry(){
+    noStroke();
+    fill(255);
+    textSize(82);
+    textStyle(BOLD);
+
+    text("GAMEOVER", 60, 200);
+  }
+
+  gen_astrds(){
     let num = 1.5 ** this.level;
     for (let i = 0; i < num; i++) {
       let ax = Math.floor(random() * 640);
@@ -216,7 +297,7 @@ class GameScn {
     }
   }
 
-  display_level() {
+  display_level(){
     noStroke();
     fill(255);
     textSize(62);
@@ -225,15 +306,7 @@ class GameScn {
     text("LEVEL " + this.level, 175, 200);
   }
 
-  key_pressed() {
-    this.player.key_pressed();
-  }
-
-  key_released() {
-    this.player.key_released();
-  }
-
-  check_all_asteroids() {
+  check_all_asteroids(){
     let f = false;
     for (let i = 0; i < this.astrds.length; i++) {
       if (this.astrds[i] !== undefined) f = true;
@@ -241,7 +314,7 @@ class GameScn {
     if (!f) this.state = "NEXT_LEVEL";
   }
 
-  destroy_bullet() {
+  destroy_bullet(){
     for (let i = 0; i < this.bullets.length; i++) {
       let blt = this.bullets[i];
       if (blt !== undefined) {
@@ -284,7 +357,7 @@ class GameScn {
         // 弾と衝突したら、オブジェクトを除外
         for (let j = 0; j < this.astrds.length; j++) {
           if (this.astrds[j] !== undefined) {
-            this.astrds[j].tch_blt(bx, by, br);
+            this.astrds[j].tch_obj(bx, by, br);
             if (!this.astrds[j].exist) {
               if (this.astrds[j].type === 0) this.score++;
               this.bullets[i] = undefined;
@@ -297,7 +370,8 @@ class GameScn {
 
   display_life() {
     for (let i = 0; i < this.lifeGauge.length; i++) {
-      this.lifeGauge[i] = new Player(550 + i * 32, 35, -90);
+      if (i > this.life-1) this.lifeGauge[i] = undefined;
+      else this.lifeGauge[i] = new Player(550 + i * 32, 35, -90);
     }
     display_objs(this.lifeGauge);
   }
@@ -306,7 +380,36 @@ class GameScn {
     noStroke();
     fill(255);
     textSize(20);
+    textStyle(BOLD);
     text("score: " + this.score, 25, 25);
   }
 
+  tch_player() {
+   // 小惑星と衝突したら、playerを除外
+    for (let i = 0; i < this.astrds.length; i++) {
+      if (this.astrds[i] !== undefined) {
+        // 弾の座標
+        let bx = this.astrds[i].x;
+        let by = this.astrds[i].y;
+        let br = this.astrds[i].r;
+
+        if (this.astrds[i] !== undefined) {
+          this.player.tch_obj(bx, by, br);
+          // 触れていたら
+          if (!this.player.exist) {
+            // playerを中心に持っていく
+            this.player.x = 320;
+            this.player.y = 280;
+            this.player.vx = 0;
+            this.player.vy = 0;
+            this.player.deg_theta  = -90;
+
+            this.comeup.reset_timer();
+            this.life--;
+            if (this.life < 1) this.state = "RETRY";
+          }
+        }
+      }
+    }
+  }
 }
